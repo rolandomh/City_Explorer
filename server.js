@@ -12,7 +12,7 @@ app.use(cors());
 app.get('/', (request, response) => {
   response.send('Home Page!');
 });
-app.get('/bad', (request, response) => 
+app.get('/bad', (request, response) => { 
   throw new Error('poo');
 });
 app.get('/location', handleLocation);

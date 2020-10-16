@@ -3,7 +3,7 @@
 
 * [node.js](https://nodejs.org/en/)
 * [.gitignore](https://www.toptal.com/developers/gitignore)
-
+(Trello)[https://trello.com/b/gVqM6bY9/city-explorer]
 # Project Name
 ## City_Explorer
 **Author**:  RoMH
@@ -16,17 +16,34 @@ For each of the features listed below, make an estimate of the time it will take
 
 ## Overview
 <!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
-Number and name of feature: ________________________________
+Number and name of feature: ____________repo and structure____________________
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: __48__
 
-Start time: _____
+Start time: ___1pm__
 
 Finish time: _____
 
 Actual time needed to complete: _____
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? 
+data directory - containing location.json and weather.json
+
+
+.env - with your PORT. Make sure this file is in your .gitignore.
+README.md - with documentation regarding your lab and its current state of development. Check the "documentation" section below for more details on how that should look AT MINIMUM
+.gitignore - with standard NodeJS configurations
+.eslintrc.json - with Code 301 course standards for the linter
+package.json - with all dependencies and any associated details related to configuration. The dependencies needed for today's lab include: express, dotenv, and cors.
+Note that the package-lock.json file is automatically created when dependencies are installed and ensures that future installations of the project use the same versions of the dependencies.
+Deploy your basic express server to Heroku.
+Add an item
+Activity
+Show Details
+Write a comment…
+ADD TO CARD
+POWER-UPS
+-->
 Number and name of feature: ________________________________
 
 Estimate of time needed to complete: _____

@@ -59,7 +59,13 @@ function Restaurant(obj) {
 }
 
 
-// Start our server!
-app.listen(PORT, () => {
-  console.log(`Server is now listening on port ${PORT}`);
-});
+// Start our server! 
+function startServer() {
+   app.listen(PORT, () => {
+    console.log(`App is listening on ${PORT}`)
+   });
+}
+
+client.connect()
+.then(startServer)
+.catch(e => console.log(e));

@@ -1,67 +1,65 @@
 'use strict';
 
-require('dotenv').config();
 
+// Bring in our dependencies
 const express = require('express');
 const cors = require('cors');
 
-const PORT = process.env.PORT;
+require('dotenv').config();
+
+// Declare our port for our server to listen on
+const PORT = process.env.PORT || 3000;
+
+// start/instanciate Express
 const app = express();
+
+// Use CORS (cross origin resource sharing)
 app.use(cors());
 
+// Routes
 app.get('/', (request, response) => {
-  response.send('Home Page!');
+  response.send('Hello World');
 });
-app.get('/bad', (request, response) => { 
-  throw new Error('poo');
+
+app.get('/location', (request, response) => {
+  let city = request.query.city;
+  // getting the data from a database or API, using a flat file
+  let data = require('./data/location.json')[0];
+  let location = new Location(data, city);
+  response.send(location);
 });
-app.get('/location', handleLocation);
-app.get('/restaurants', handleRestaurants);
-function handleLocation(request, response) {
-  try {
-    const geoData = require('./data/location.json');
-    const city = request.query.city;
-    const locationData = new Location(city, geoData);
-    response.send(locationData);
-  }
-  catch (error) {
-    console.log('ERROR', error);
-    response.status(500).send('WHAT DA BLOODCLOT.');
-  }
-}
-function Location(city, geoData) {
-  this.search_query = city;
-  this.formatted_query = geoData[0].display_name;
-  this.latitude = geoData[0].lat;
-  this.longitude = geoData[0].lon;
+
+app.get('/restaurants', (request, response) => {
+  let data = require('./data/restaurants.json');
+  let restaurantArray = [];
+  data.nearby_restaurants.forEach(value => {
+    let restaurant = new Restaurant(value);
+    restaurantArray.push(restaurant);
+  })
+  console.log(restaurantArray);
+  response.send(restaurantArray);
+
+});
+
+// Constructor to tailor our incoming raw data
+
+function Location(obj, query){
+  this.lat = obj.lat;
+  this.lon = obj.lon;
+  this.search_query = query;
+  this.location = obj.display_name;
 }
 
-function handleRestaurants(request, response) {
-  try {
-    const data = require('./data/restaurants.json');
-    const restaurantData = [];
-    data.nearby_restaurants.forEach(entry => {
-      restaurantData.push(new Restaurant(entry));
-    });
-    response.send(restaurantData);
-  }
-  catch (error) {
-    console.log('ERROR', error);
-    response.status(500).send('AYE MAHN WHATS RONGWICHU!');
-  }
-}
-
-function Restaurant(entry) {
-  this.restaurant = entry.restaurant.name;
-  this.cuisines = entry.restaurant.cuisines;
-  this.locality = entry.restaurant.location.locality;
-}
-
-function notFoundHandler(request, response) {
-  response.status(404).send('huh?');
+function Restaurant(obj) {
+  this.url = obj.restaurant.url;
+  this.name = obj.restaurant.name;
+  this.rating = obj.restaurant.user_rating.aggregate_rating;
+  this.cost = obj.price_range;
+  this.image_url = obj.restaurant.thumb;
 }
 
 
-
-// Make sure the server is listening for requests
-app.listen(PORT, () => console.log(`App is listening on ${PORT}`));
+// Start our server!
+app.listen(PORT, () => {
+  console.log(`Server is now listening on port ${PORT}`);
+});

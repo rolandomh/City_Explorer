@@ -63,7 +63,7 @@ city: search_query,
 key: process.env.WEATHER_API_KEY,
 days: 8
 }
-superagent.get(url)
+  superagent.get(url)
 .query(queryParams)
 .then(results => {
 let weatherResults = response.body.data.map(weatherResults => {
@@ -73,8 +73,9 @@ return day;
 response.status(200).send(weatherResults);
 }).catch(error => errorAlert(error, res));
 }
-// Yelp Function
-function yelpHandler(request, response) {
+
+// Yelp {HANDLER} Function
+function yelpHandler(request, response){
 let city = request.query.search_query;
 let url = 'https://api.yelp.com/v3/businesses/search';
 const queryParams = {
@@ -82,7 +83,7 @@ location: city,
 term: 'food',
 limit: 5
 }
-superagent.get(url)
+  superagent.get(url)
 .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
 .query(queryParams)
 .then(data => {
@@ -101,7 +102,7 @@ city: search_query,
 key: process.env.WEATHER_API_KEY,
 days: 8
 }
-superagent.get(url)
+  superagent.get(url)
 .query(queryParams)
 .then(results => {
 let weatherResults = results.body.data.map(weatherResults => {

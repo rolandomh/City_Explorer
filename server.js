@@ -13,6 +13,9 @@ const app = express();
 const pg = require('pg');
 const PORT = process.env.PORT || 3000;
 
+// Error call on server
+client.on('error', err => console.error(err));
+
 // use CORS
 app.use(cors());
 app.use (express.static('./public'));
@@ -162,9 +165,8 @@ this.popularity = obj.popularity;
 this.released_on = obj.release_date;
 }
 //ERROR CALLBACK
-const errorAlert = (err, response) => {
-response.status(500).send('NOPE');
-console.log('error', err);
+function notFoundHandler(req, res) {
+  res.status(404).send('Try again.');
 }
 // postgres
 // .then startServer
@@ -174,5 +176,5 @@ function startServer() {
 // Make sure the server is listening for reqs
 client.connect()
 .then(() => {
-app.listen(PORT, () => console.log(`App is listening on ${PORT}`));
+  app.listen(PORT, () => console.log(`App is listening on ${PORT}`));
 });

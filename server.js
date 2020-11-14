@@ -2,21 +2,25 @@
 
 // Load Environment Variables from the .env file
 require('dotenv').config();
+
 // Application Dependencies
 const express = require('express');
 const superagent = require('superagent');
 const cors = require('cors');
-const pg = require('pg');
-const { request } = require('express');
-const client = new pg.Client(process.env.DATABASE_URL);
-// Application Setup
-const PORT = process.env.PORT || 3000;
-// ERROR CALL
-client.on('error', err => console.error(err));
+
 // Start express
 const app = express();
+const pg = require('pg');
+const PORT = process.env.PORT || 3000;
+
 // use CORS
 app.use(cors());
+app.use (express.static('./public'));
+
+// Start Client and hope for the best
+console.log(PORT, process.env.DATABASE_URL);
+const client = new pg.Client(process.env.DATABASE_URL);
+
 // Routes/Gets
 app.get('/location', locationHandler);
 app.get('/weather', weatherHandler);
@@ -24,16 +28,12 @@ app.get('/yelp', yelpHandler);
 app.get('/trails', trailsHandler);
 app.get('/movies', moviesHandler);
 app.use('*', notFoundHandler);
-app.get('/', (req, res) => {
-res.send('Hello World');
+app.get('/', (request, response) => {
+response.send('Hello World');
 });
-//ERROR CALLBACK
-const errorAlert = (err, response) => {
-response.status(500).send('NOPE');
-console.log('error', err);
-}
+
 // Location Function
-function locationHandler(req, response) {
+function locationHandler(request, response) {
 let city = request.query.city;
 let url = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEO_DATA_API_KEY}&q=${city}&format=json`;
 let sql = 'SELECT * FROM locations WHERE search_query LIKE ($1);'
@@ -71,7 +71,7 @@ let day = new Weather(weatherResults);
 return day;
 });
 response.status(200).send(weatherResults);
-}).catch(error => errorAlert(error, res));
+}).catch(error => errorAlert(error, response));
 }
 
 // Yelp {HANDLER} Function
@@ -149,7 +149,9 @@ this.trail_url = obj.url;
 this.conditions = obj.conditions;
 this.condition_date = new Date(obj.conditionDate).toLocaleDateString();
 this.condition_time = new Date(obj.conditionDate).toLocaleTimeString();
-}// Movie Constructor
+}
+
+// Movie Constructor
 function Movie(obj) {
 this.title = obj.original_title;
 this.overview = obj.overview;
@@ -159,14 +161,15 @@ this.image_url = `https://image.tmdb.org/t/p/w500/${obj.poster_path}`;
 this.popularity = obj.popularity;
 this.released_on = obj.release_date;
 }
+//ERROR CALLBACK
+const errorAlert = (err, response) => {
+response.status(500).send('NOPE');
+console.log('error', err);
+}
 // postgres
 // .then startServer
 function startServer() {
-// .catch(e => console.log(e));
-app.listen(PORT, () => {
-console.log(`App is listening on ${PORT}`)
-});
-}
+
 // client.connect()
 // Make sure the server is listening for reqs
 client.connect()

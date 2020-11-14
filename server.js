@@ -85,17 +85,18 @@ const queryParams = {
 location: city,
 term: 'food',
 limit: 5
-}
+}}
   superagent.get(url)
 .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
 .query(queryParams)
 .then(data => {
 let foodData = data.body.businesses;
 let allRestuarants = foodData.map(food => new Restaurant(food));
+
 // console.log('results from superagent', data.body);
 response.status(200).send(allRestuarants);
 }).catch(error => errorAlert(error, response));
-}
+
 // Movie Handler
 function movieHandler(request, response) {
 let search_query = req.query.search_query;
